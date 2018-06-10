@@ -29,12 +29,12 @@ import transverses.DTO.ElementDTO;
 public class EZooOuvert extends PApplet implements Positionnable{
 
 	//CONSTANTES DE LA CLASSE
-	private final int COULEUR_FOND_1 = 200;
-	private final int COULEUR_TEXTE_1 = 0;
-	public final int NB_ZONES_X = 6;
-	public final int NB_ZONES_Y = 4;
-	
-	
+	private final int COULEUR_FOND_1 = color(200,200,200);
+	private final int COULEUR_TEXTE_1 = color(0,0,0);	
+	private final int COULEUR_VISITEUR = color(0,0,255);
+	private final int COULEUR_HERBIVORE = color(0,255,0);
+	private final int COULEUR_CARNIVORE = color(255,0,0);
+	private final int COULEUR_STIMULATEUR = color(255,0,255);	
 	///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 	/**
 	 * Presenteur qui instancie l'écran.
@@ -64,7 +64,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	/**
 	 * Liste des elements  afficher dans le canvas.
 	 */
-	private ArrayList<ElementDTO> mesElements;
+	/*private ArrayList<ElementDTO> mesElements;*/
 	////////////////////////////////////////////////////////////Constructeurs.////////////////////////////////////////////////////////////////////////
 
 	/////////////////////////////////////////////////////////////Accesseurs.//////////////////////////////////////////////////////////////////////////
@@ -78,15 +78,15 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	public void settings() {
 		//Définition du canevas
 		size(1280,800);
-		
+		/*
 		//Récupération des premiers éléments
 		mesElements = presenteur.initialiserElements();
 		
 		for (Iterator<ElementDTO> iterator = mesElements.iterator(); iterator.hasNext();) {
 			ElementDTO elementDTO = (ElementDTO) iterator.next();
-			System.out.println("Reception de l'element "+elementDTO.posX+" "+elementDTO.posY); 
+			System.out.println("Reception de l'element "+elementDTO.getPosX()+" "+elementDTO.getPosY()); 
 		}
-		//if (mesElements.size() > 0) System.out.println("Element reçu !");
+		*/
 	}
 	
 	/**
@@ -115,7 +115,8 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	public void draw() {
 		
 		afficherStructure();
-		afficherElements();
+		//Demandera au métier les élements à jour.
+		afficherElements(presenteur.getElements());
 	}
 	
 	/////////////////////////////////////////////////////////////////Méthodes publiques.///////////////////////////////////////////////////////////////
@@ -200,11 +201,16 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	/**
 	 * Méthode qui affichera tous les éléments mobiles.
 	 */
-	private void afficherElements() {
-		for (Iterator<ElementDTO> iterator = mesElements.iterator(); iterator.hasNext();) {
+	private void afficherElements(ArrayList<ElementDTO> elementsDTO) {
+		for (Iterator<ElementDTO> iterator = elementsDTO.iterator(); iterator.hasNext();) {
 			ElementDTO elementDTO = (ElementDTO) iterator.next();
-			ellipse(elementDTO.posX, elementDTO.posY, 10, 10);
+
+			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.VISITEUR) {fill(COULEUR_VISITEUR);}
+			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.HERBIVORE) {fill(COULEUR_HERBIVORE);}
+			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.CARNIVORE) {fill(COULEUR_CARNIVORE);}
+			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.STIMULATEUR) {fill(COULEUR_STIMULATEUR);}
 			
+			ellipse(elementDTO.getPosX(), elementDTO.getPosY(), 10, 10);
 		}
 	}
 }

@@ -52,10 +52,10 @@ public class PGeneral {
 	}
 	
 	/**
-	 * Méthode qui permettra d'aller chercher (créer) les premiers éléments.
+	 * Méthode qui permettra d'aller chercher (ou créer) les éléments à jour.
 	 */
-	public ArrayList<ElementDTO> initialiserElements(){
-		return facadeElement.initialiserElements();
+	public ArrayList<ElementDTO> getElements(){
+		return facadeElement.getElements();
 	}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 	
