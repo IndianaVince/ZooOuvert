@@ -76,17 +76,8 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	 */
 	@Override
 	public void settings() {
-		//Définition du canevas
+		//Définition du canvas
 		size(1280,800);
-		/*
-		//Récupération des premiers éléments
-		mesElements = presenteur.initialiserElements();
-		
-		for (Iterator<ElementDTO> iterator = mesElements.iterator(); iterator.hasNext();) {
-			ElementDTO elementDTO = (ElementDTO) iterator.next();
-			System.out.println("Reception de l'element "+elementDTO.getPosX()+" "+elementDTO.getPosY()); 
-		}
-		*/
 	}
 	
 	/**
@@ -106,6 +97,8 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		
 		cadranSatisfaction = new GKnob(this, POSX_CANVAS+11*LARGEUR_CANVAS/(2*NB_ZONES_X), POSY_CANVAS+HAUTEUR_CANVAS+10, 70, 70, (float) 0.75);
 		cadranSatisfaction.setEnabled(false);
+		
+		ellipseMode(CENTER);
 	}
 	
 	/**
@@ -133,11 +126,6 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		//Compatibilité avec Processing.
 		PApplet.main("vue.EZooOuvert"); 
 	}
-	
-
-	
-	
-	
 	
 	///////////////////////////////////////////////////////////////////Méthodes privées////////////////////////////////////////////////////////////////
 	
@@ -200,6 +188,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 
 	/**
 	 * Méthode qui affichera tous les éléments mobiles.
+	 * @param la liste des éléments à afficher.
 	 */
 	private void afficherElements(ArrayList<ElementDTO> elementsDTO) {
 		for (Iterator<ElementDTO> iterator = elementsDTO.iterator(); iterator.hasNext();) {

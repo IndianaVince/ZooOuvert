@@ -74,6 +74,12 @@ public class FacadeElement implements Positionnable{
 			listeElements.addAll(creerElements(NOMBRE_ELEMENT, 'h'));
 			listeElements.addAll(creerElements(NOMBRE_ELEMENT, 'c'));
 			listeElements.addAll(creerElements(NOMBRE_ELEMENT, 's'));
+		}else {
+			//Tout le monde bouge !
+			for (Iterator<Element> iterator = listeElements.iterator(); iterator.hasNext();) {
+				Element element = (Element) iterator.next();
+				element.seDeplacer();
+			}
 		}
 		
 		//mettreAJourElements();
@@ -84,18 +90,39 @@ public class FacadeElement implements Positionnable{
 	
 	/**
 	 * Meéthode qui devra, à partir des constantes trouvées dans Positionnable, calculer la position de chaque stimulateur sur le canvas.
-	 * @return
+	 * @return la liste des positions des stimulateurs.
 	 */
 	private ArrayList<Position> calculPositionsStimulateurs(){
 		ArrayList<Position> laListe = new ArrayList<>();
 		//Je dois calculer la position du premier element puis déduire la position des autres tout en restant dans le canvas.
 		
-		//Le premier
-		laListe.add(new Position(
-				(POSX_CANVAS + LARGEUR_CANVAS)/(NB_ZONES_X), 
-				(POSY_CANVAS + HAUTEUR_CANVAS)/(NB_ZONES_Y)));
-		//Et les autres
+		
+		float posXInitiale = (POSX_CANVAS + LARGEUR_CANVAS)/(NB_ZONES_X);
+		float posYInitiale = (POSY_CANVAS + HAUTEUR_CANVAS)/(NB_ZONES_Y);
 			
+		int compteX=0;
+		while (compteX < NB_ZONES_X) {
+			
+			int compteY=0;
+			//Le premier de la colonne
+			//Si liste vide, c'est le premier en haut à gauche
+			if (laListe.isEmpty()) {
+				laListe.add(new Position(posXInitiale, posYInitiale));
+			}else {
+				//C'est le premier de la colonne suivante.
+				laListe.add(new Position(laListe.get(laListe.size()-1).getPosX() +  + (LARGEUR_CANVAS/NB_ZONES_X), posYInitiale));
+			}
+			while(compteY < NB_ZONES_Y -1) {
+				
+				//Les suivants de la colonne
+				laListe.add(new Position(
+						laListe.get(laListe.size()-1).getPosX(), 
+						laListe.get(laListe.size()-1).getPosY() + HAUTEUR_CANVAS/NB_ZONES_Y));
+				compteY++;
+			}
+			
+			compteX++;
+		}
 		return laListe;
 	}
 	
@@ -161,8 +188,8 @@ public class FacadeElement implements Positionnable{
 			
 			//Création de l'élement générique
 			ElementDTO e = new ElementDTO();
-			e.setPosX(element.getPosition().getPosX());
-			e.setPosY(element.getPosition().getPosY());
+			e.setPosX(element.getPositionActuelle().getPosX());
+			e.setPosY(element.getPositionActuelle().getPosY());
 			
 			//System.out.println("toDTO : "+element.getClass()+" trouvé.");	
 			//Saisie de la particularité en fonction du type réellement instancié.
