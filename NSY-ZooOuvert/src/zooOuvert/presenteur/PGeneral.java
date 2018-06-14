@@ -1,14 +1,14 @@
 /**
  * 
  */
-package presenteur;
+package zooOuvert.presenteur;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import metier.facades.FacadeElement;
-import transverses.DTO.ElementDTO;
-import vue.EZooOuvert;
+import zooOuvert.metier.facades.FacadeElement;
+import zooOuvert.transverses.DTO.DepotDTO;
+import zooOuvert.transverses.DTO.ElementDTO;
+import zooOuvert.vue.ecrans.EZooOuvert;
 
 /**
  * Presenteur principal de l'application.
@@ -16,7 +16,7 @@ import vue.EZooOuvert;
  * @author vincent
  *
  */
-public class PGeneral {
+public class PGeneral implements ImplPGeneral{
 
 ///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 	/**
@@ -57,7 +57,31 @@ public class PGeneral {
 	public ArrayList<ElementDTO> getElements(){
 		return facadeElement.getElements();
 	}
+	
+	@Override
+		public void envoyerDepot(DepotDTO depot) {
+			facadeElement.envoyerDepot(depot);
+			
+		}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
+
+	@Override
+	public void insererOdeur(ElementDTO odeur) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void creerElement(ElementDTO element) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void detruireElement(ElementDTO positionElement) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

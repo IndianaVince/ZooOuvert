@@ -1,4 +1,4 @@
-package metier.entites;
+package zooOuvert.metier.entites;
 /**
  * Classe representant les visiteurs qui seront affichés dans le canvas.
  * C’est le client de l’attraction, il se déplace dans le parc et est satisfait si des animaux se situent autour de lui. 

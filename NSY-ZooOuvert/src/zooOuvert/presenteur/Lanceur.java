@@ -1,7 +1,7 @@
 
-package presenteur;
+package zooOuvert.presenteur;
 
-import vue.EZooOuvert;
+import zooOuvert.vue.ecrans.EZooOuvert;
 
 /**
  * @author vincent

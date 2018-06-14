@@ -1,4 +1,4 @@
-package metier.entites;
+package zooOuvert.metier.entites;
 
 
 /**

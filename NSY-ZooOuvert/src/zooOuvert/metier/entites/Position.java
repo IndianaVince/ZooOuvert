@@ -1,6 +1,6 @@
-package metier.entites;
+package zooOuvert.metier.entites;
 
-import transverses.Positionnable;
+import zooOuvert.transverses.Positionnable;
 
 /**
  * Position d'un élément dans le canvas.
@@ -52,7 +52,7 @@ public class Position implements Positionnable{
 	 */
 	public void setPosX(float posX) {
 		if (posX < POSX_CANVAS || posX > POSX_CANVAS + LARGEUR_CANVAS) {
-			System.err.println("tentative de sortie du canvas.");
+			//System.err.println("tentative de sortie du canvas.");
 		} else {
 			this.posX = posX;
 		}
@@ -65,7 +65,7 @@ public class Position implements Positionnable{
 	 */
 	public void setPosY(float posY) {
 		if (posY < POSY_CANVAS || posY > POSY_CANVAS + HAUTEUR_CANVAS) {
-			System.err.println("tentative de sortie du canvas.");
+			//System.err.println("tentative de sortie du canvas.");
 		} else {
 			this.posY = posY;
 		}

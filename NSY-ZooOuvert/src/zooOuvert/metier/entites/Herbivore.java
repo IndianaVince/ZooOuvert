@@ -1,4 +1,4 @@
-package metier.entites;
+package zooOuvert.metier.entites;
 /**
  * Classe representant les herbivores qui seront affichés dans le canvas.
  * Animaux se déplaçant au grès de leurs envies. 
@@ -11,7 +11,7 @@ public class Herbivore extends Odorant{
 
 	public Herbivore(Position position) {
 		super(position);
-		// TODO Auto-generated constructor stub
+		setPortee(40);
 	}
 
 }

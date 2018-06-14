@@ -1,4 +1,4 @@
-package metier.entites;
+package zooOuvert.metier.entites;
 /**
  * Classe representant les carnivores qui seront affichés dans le canvas.
  * Animaux se déplaçant au grès de leurs envies. Lorsqu’ils sentent une odeur d’herbivore, ils s’approchent de leur proie jusqu’au moment du repas. 

@@ -1,16 +1,17 @@
-package metier.facades;
+package zooOuvert.metier.facades;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import metier.entites.Carnivore;
-import metier.entites.Element;
-import metier.entites.Herbivore;
-import metier.entites.Position;
-import metier.entites.Stimulateur;
-import metier.entites.Visiteur;
-import transverses.Positionnable;
-import transverses.DTO.ElementDTO;
-import transverses.DTO.ElementDTO.EnumTypeElement;
+import zooOuvert.metier.entites.Carnivore;
+import zooOuvert.metier.entites.Element;
+import zooOuvert.metier.entites.Herbivore;
+import zooOuvert.metier.entites.Position;
+import zooOuvert.metier.entites.Stimulateur;
+import zooOuvert.metier.entites.Visiteur;
+import zooOuvert.transverses.Positionnable;
+import zooOuvert.transverses.DTO.DepotDTO;
+import zooOuvert.transverses.DTO.ElementDTO;
+import zooOuvert.transverses.DTO.ElementDTO.EnumTypeElement;
 
 /**
  * Facade de la classe métier Element.
@@ -19,7 +20,9 @@ import transverses.DTO.ElementDTO.EnumTypeElement;
  */
 public class FacadeElement implements Positionnable{
 
-///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
+	
+	
+	///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Constante determinant le nombre d'élémnents d'un même type à crééer au départ.
@@ -85,6 +88,19 @@ public class FacadeElement implements Positionnable{
 		//mettreAJourElements();
 		
 		return toDTO(listeElements);
+	}
+	
+	/**
+	 * Méthode qui permettra de gerer le comportement en cas de relache d'une odeur ou d'un ajout sur le canvas.
+	 * @param objetRelache objet déposer sur le canvas
+	 * @param posX de l'objet
+	 * @param posY de l'objet
+	 */
+	/*
+	 * Il faut d'abord tester si l'objet relaché est une odeur ou un ajout et, en focntion du type, on fera ce qu'il faut.
+	 */
+	public void envoyerDepot(DepotDTO depot) {
+		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.ODEUR) {traiterDepotOdeur(depot); }
 	}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 	
@@ -194,13 +210,53 @@ public class FacadeElement implements Positionnable{
 			//System.out.println("toDTO : "+element.getClass()+" trouvé.");	
 			//Saisie de la particularité en fonction du type réellement instancié.
 			if (element instanceof Visiteur) {e.setTypeElement(EnumTypeElement.VISITEUR);} 
-			if (element instanceof Herbivore) {e.setTypeElement(EnumTypeElement.HERBIVORE);} 
+			if (element instanceof Herbivore) {
+				e.setTypeElement(EnumTypeElement.HERBIVORE);
+				e.setPorteeOdeur(((Herbivore) element).getPortee());
+				} 
 			if (element instanceof Carnivore) {e.setTypeElement(EnumTypeElement.CARNIVORE);} 
-			if (element instanceof Stimulateur) {e.setTypeElement(EnumTypeElement.STIMULATEUR);} 
+			if (element instanceof Stimulateur) {
+				e.setTypeElement(EnumTypeElement.STIMULATEUR);
+				e.setPorteeOdeur(((Stimulateur) element).getPortee());
+				if (((Stimulateur) element).getTypeDiffusion() == Stimulateur.TypeDiffusion.CARNIVORE) {
+					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.CARNIVORE);
+				} else if (((Stimulateur) element).getTypeDiffusion() == Stimulateur.TypeDiffusion.CARNIVORE) {
+					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.CARNIVORE);
+				} else {
+					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.INERTE);
+				}
+			} 
 			
 		
 			listeDTO.add(e);
 		}
 		return listeDTO;
 	}
+	
+	/**
+	 * Gère un depot d'odeur après relachement du bouton de la souris.
+	 * @param depot d'odeur sous forme DTO.
+	 */
+	private void traiterDepotOdeur(DepotDTO depot) {
+		/*
+		 * Pour chaque stimulateur de la liste, je vais calculer la distance entre les coord du depot et celles de l'élement.
+		 * Si la distance est inferieur à la distance minimale (30), c'est qu'on est dedans.
+		 */
+		for (Iterator<Element> iterator = listeElements.iterator(); iterator.hasNext();) {
+			Element element = (Element) iterator.next();
+			
+			if (element instanceof Stimulateur) {
+				double distanceReelle = Math.sqrt(
+										Math.pow(element.getPositionActuelle().getPosX() - depot.getPosX(), 2) + 
+										Math.pow(element.getPositionActuelle().getPosY() - depot.getPosY(), 2)
+										);
+				//System.out.println("distance réelle : "+distanceReelle);
+				if (distanceReelle<=30) {
+					((Stimulateur) element).diffuser(depot);
+				}
+			}
+			
+		}
+	}
+
 }

@@ -1,7 +1,7 @@
-package transverses.DTO;
+package zooOuvert.transverses.DTO;
 
 
-import transverses.Positionnable;
+import zooOuvert.transverses.Positionnable;
 
 /**
  * Coquille qui servira au transport d'éléments entre les couches applicatives.
@@ -25,7 +25,16 @@ public class ElementDTO implements Positionnable{
 	 * (Sert principalement à l'affichage)
 	 */
 	private EnumTypeElement typeElement;
-	public static enum EnumTypeElement {VISITEUR, HERBIVORE, CARNIVORE, STIMULATEUR}
+	public static enum EnumTypeElement {VISITEUR,HERBIVORE,CARNIVORE,STIMULATEUR}
+	/**
+	 * Portée de l'odeur pour les odorants.
+	 */
+	private int porteeOdeur;
+	/**
+	 * Type d'odeur.
+	 */
+	private EnumTypeOdeur typeOdeur;
+	public static enum EnumTypeOdeur {HERBIVORE,CARNIVORE,INERTE}
 	
 ////////////////////////////////////////////////////////////Constructeurs.////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +76,33 @@ public class ElementDTO implements Positionnable{
 	public void setTypeElement(EnumTypeElement type) {
 		this.typeElement = type;
 	}
+	/**
+	 * @return the porteeOdeur
+	 */
+	public int getPorteeOdeur() {
+		return porteeOdeur;
+	}
+	/**
+	 * @param porteeOdeur the porteeOdeur to set
+	 */
+	public void setPorteeOdeur(int porteeOdeur) {
+		this.porteeOdeur = porteeOdeur;
+	}
+	/**
+	 * @return the typeOdeur
+	 */
+	public EnumTypeOdeur getTypeOdeur() {
+		return typeOdeur;
+	}
+	/**
+	 * @param typeOdeur the typeOdeur to set
+	 */
+	public void setTypeOdeur(EnumTypeOdeur typeOdeur) {
+		this.typeOdeur = typeOdeur;
+	}
+	
+	
+	
 /////////////////////////////////////////////////////////////Processing.//////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////Méthodes publiques.////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
