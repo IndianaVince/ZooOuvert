@@ -215,13 +215,14 @@ public class FacadeElement implements Positionnable{
 				e.setPorteeOdeur(((Herbivore) element).getPortee());
 				} 
 			if (element instanceof Carnivore) {e.setTypeElement(EnumTypeElement.CARNIVORE);} 
+			
 			if (element instanceof Stimulateur) {
 				e.setTypeElement(EnumTypeElement.STIMULATEUR);
 				e.setPorteeOdeur(((Stimulateur) element).getPortee());
 				if (((Stimulateur) element).getTypeDiffusion() == Stimulateur.TypeDiffusion.CARNIVORE) {
 					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.CARNIVORE);
-				} else if (((Stimulateur) element).getTypeDiffusion() == Stimulateur.TypeDiffusion.CARNIVORE) {
-					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.CARNIVORE);
+				} else if (((Stimulateur) element).getTypeDiffusion() == Stimulateur.TypeDiffusion.HERBIVORE) {
+					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.HERBIVORE);
 				} else {
 					e.setTypeOdeur(ElementDTO.EnumTypeOdeur.INERTE);
 				}

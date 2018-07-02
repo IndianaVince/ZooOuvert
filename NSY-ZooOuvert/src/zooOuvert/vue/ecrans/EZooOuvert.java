@@ -37,9 +37,9 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	private final int COULEUR_TEXTE_1 = color(0,0,0);	
 	private final int COULEUR_VISITEUR = color(0,0,255);
 	private final int COULEUR_HERBIVORE = color(0,255,0);
-	private final int COULEUR_PORTEE_HERBIVORE = color(200,255,200);
+	private final int COULEUR_PORTEE_HERBIVORE = color(100,255,100,50);
 	private final int COULEUR_CARNIVORE = color(255,0,0);
-	private final int COULEUR_PORTEE_CARNIVORE = color(255,200,200);
+	private final int COULEUR_PORTEE_CARNIVORE = color(255,100,100,50);
 	private final int COULEUR_STIMULATEUR = color(255,0,255);	
 	///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 	/**
@@ -101,6 +101,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	@Override
 	public void setup() {
 		smooth();
+		frameRate(60);
 		stroke(2);
 		
 		creerSlider();
@@ -120,6 +121,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		afficherStructure();
 		//Demandera au métier les élements à jour.
 		afficherElements(presenteur.getElements());
+		afficherTemps();
 		odeurHerbivore.afficher();
 		odeurCarnivore.afficher();
 	}
@@ -217,7 +219,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		
 		textSize(15);
 		text("Le parc",50,80);
-		text("Temps d'entraînement : HH:MM:SS",635,80);
+		text("Temps d'entraînement : ",635,80);
 		
 		//Un peu de bidouille pour bien afficher le texte sous les première et deuxième colonnes.
 		textAlign(CENTER);
@@ -248,40 +250,42 @@ public class EZooOuvert extends PApplet implements Positionnable{
 			ElementDTO elementDTO = (ElementDTO) iterator.next();
 
 			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.VISITEUR) {fill(COULEUR_VISITEUR);}
-			
+			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.CARNIVORE) {fill(COULEUR_CARNIVORE);}
 			
 			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.HERBIVORE) {
 				fill(COULEUR_PORTEE_HERBIVORE);
 				ellipse(elementDTO.getPosX(), elementDTO.getPosY(), elementDTO.getPorteeOdeur(), elementDTO.getPorteeOdeur());
 				fill(COULEUR_HERBIVORE);
 				}
-			
-			
-			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.CARNIVORE) {fill(COULEUR_CARNIVORE);}
-			
-			
-			//TODO Trouver pourquoi la couleur de diffusion est inexacte.
-			//TODO Trouver pourquoi l'odeur carnivore ne fonctionne pas.
+
 			if (elementDTO.getTypeElement() == ElementDTO.EnumTypeElement.STIMULATEUR) {
-				if (elementDTO.getTypeOdeur()==ElementDTO.EnumTypeOdeur.INERTE) {
-					if (elementDTO.getTypeOdeur()==ElementDTO.EnumTypeOdeur.CARNIVORE) {
+				
+				if (! elementDTO.getTypeOdeur().equals(ElementDTO.EnumTypeOdeur.INERTE)) {
+					System.out.println("Odeur non inerte à afficher.");
+					if (elementDTO.getTypeOdeur().equals(ElementDTO.EnumTypeOdeur.CARNIVORE)) {
 						fill(COULEUR_PORTEE_CARNIVORE);
-					} else if (elementDTO.getTypeOdeur()==ElementDTO.EnumTypeOdeur.HERBIVORE) {
+					} else {
 						fill(COULEUR_PORTEE_HERBIVORE);
 					}
+					//Création de la portée de l'odeur.
 					ellipse(elementDTO.getPosX(), elementDTO.getPosY(), elementDTO.getPorteeOdeur(), elementDTO.getPorteeOdeur());
-				}					
-				fill(COULEUR_STIMULATEUR);	
-			}
+				}
+				fill(COULEUR_STIMULATEUR);
+			}					
 			
-			
-			
+			//Création visuelle de l'élément lui-même.
 			ellipse(elementDTO.getPosX(), elementDTO.getPosY(), 10, 10);
-		}
+		}		
 		
 		stroke(2);
 	}
-	
+
+	/**
+	 * Fonction qui affichera le temps simulé en haut à droite.
+	 */
+	private void afficherTemps() {
+		text(frameCount,850,80);
+	}
 	private void creerSlider() {
 		slider = new GSlider(this, 960, 465, 280, 10, 10);
 	}

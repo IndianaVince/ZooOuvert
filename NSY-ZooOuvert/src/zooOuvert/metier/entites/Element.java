@@ -1,5 +1,5 @@
 package zooOuvert.metier.entites;
-
+import zooOuvert.transverses.Positionnable;
 
 /**
  * Classe qui permet des créer des éléments qui seront affichés dans le canvas de l'écran.
@@ -7,18 +7,22 @@ package zooOuvert.metier.entites;
  * 
  * @author vincent.hofman.auditeur@lecnam.net
  */
-public abstract class Element{
+public abstract class Element implements Positionnable{
 
 
 	///////////////////////////////////////////////////////// Constantes de classe ////////////////////////////////////////////////////////////////////
 	/**
 	 * Pas de déplacement en X.
 	 */
-	private final float pasX = 1;
+	private float pasX;
 	/**
 	 * Pas de déplacement en Y.
 	 */
-	private final float pasY = 1;
+	private float pasY;
+	/**
+	 * Nombre de pas effectués.
+	 */
+	private float nombrePas = 0;
 	
 	///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 	/**
@@ -37,6 +41,8 @@ public abstract class Element{
 	 */
 	public Element(Position position) {
 		this.positionActuelle = position;
+		
+		
 	}	
 	/////////////////////////////////////////////////////////////Accesseurs.//////////////////////////////////////////////////////////////////////////
 
@@ -66,21 +72,34 @@ public abstract class Element{
 	public void seDeplacer() {
 		//Test avec position en haut à gauche de la position actuelle
 		//TODO Créer une direction aleatoire si pas de position precedente.
-		positionPrecedente = new Position(positionActuelle.getPosX()-pasX, positionActuelle.getPosY()-pasY);
 		
-		//TODO Gerer le demi tour avec les bords du canvas.
-		//Si la position actuelle est à droite de la position precedente, je continue vers la droite.
-		if (positionActuelle.getPosX() > positionPrecedente.getPosX()) {
-			positionActuelle.setPosX(positionActuelle.getPosX()+pasX);
-		}else {
-			positionActuelle.setPosX(positionActuelle.getPosX()-pasX);
+		//Si aucune position precedente n'est enregistrée (cas du premier mouvement.), il faudra créer une position aléatoire autour de la position actuelle.
+		if (positionPrecedente == null ){
+			float posXPrecedente = positionActuelle.getPosX() + (-pasX + (int)(Math.random() * ((pasX - (-pasX)) +1)));
+			float posYPrecedente = positionActuelle.getPosY() + (-pasX + (int)(Math.random() * ((pasX - (-pasX)) +1)));
+			positionPrecedente = new Position(posXPrecedente, posYPrecedente);
 		}
-		//Si la position actuelle est au dessus de la position precedente, je continue vers le haut.
-		if (positionActuelle.getPosY() > positionPrecedente.getPosY()) {
-			positionActuelle.setPosY(positionActuelle.getPosY()-pasY);
-		}else {
-			positionActuelle.setPosY(positionActuelle.getPosY()+pasY);
+		
+		//Ajustement des trajectoires tous les  20 pas pour que ce soit moins monotone.
+		if (nombrePas%20 == 0) {
+			pasX = -1 + (int)(Math.random() * ((1 - (-1)) +1));
+			pasY = -1 + (int)(Math.random() * ((1 - (-1)) +1));
 		}
+		
+		
+		//Gestion des collisions
+		if ((positionActuelle.getPosX() + pasX < POSX_CANVAS || positionActuelle.getPosX() + pasX > POSX_CANVAS + LARGEUR_CANVAS)) {
+			pasX = -pasX;
+		}
+		if ((positionActuelle.getPosY() + pasY < POSY_CANVAS || positionActuelle.getPosY() + pasY > POSY_CANVAS + HAUTEUR_CANVAS)) {
+			pasY = -pasY;
+		}	
+		
+		//Déplacement
+		positionActuelle.setPosX(positionActuelle.getPosX()+pasX);
+		positionActuelle.setPosY(positionActuelle.getPosY()+pasY);
+		
+		nombrePas++;
 	}
 	////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 

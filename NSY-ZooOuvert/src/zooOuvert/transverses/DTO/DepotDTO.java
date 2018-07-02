@@ -29,7 +29,7 @@ public class DepotDTO {
 	 */
 	private EnumTypeAction typeAction;
 	/**
-	 * Choix entre Visiteur, Carnivore et Herbivore.
+	 * Choix entre Odeur et Ajout.
 	 */
 	public enum EnumTypeAction {ODEUR, AJOUT};
 	
@@ -44,6 +44,7 @@ public class DepotDTO {
 		
 
 		if (forme instanceof Odeur) {typeAction = EnumTypeAction.ODEUR;}
+		
 		//TODO Gérer les ajouts
 		//if (forme instanceof Ajout) {typeAction = EnumTypeAction.AJOUT;}
 	}

@@ -1,5 +1,4 @@
 package zooOuvert.metier.entites;
-
 import zooOuvert.transverses.Positionnable;
 
 /**
@@ -70,6 +69,7 @@ public class Position implements Positionnable{
 			this.posY = posY;
 		}
 	}
+	
 	
 	
 }

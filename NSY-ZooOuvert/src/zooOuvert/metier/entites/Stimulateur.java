@@ -12,10 +12,10 @@ import zooOuvert.transverses.DTO.DepotDTO;
 public class Stimulateur extends Odorant{
 
 	/**
-	 * Etat du stimulateur : INACTIF ou diffuse qqch.
+	 * Etat du stimulateur : INERTE ou diffuse qqch.
 	 */
 	private TypeDiffusion typeDiffusion;
-	public enum TypeDiffusion {HERBIVORE, CARNIVORE, INERTE};
+	public enum TypeDiffusion {HERBIVORE,CARNIVORE,INERTE};
 	
 	public Stimulateur(Position position) {
 		super(position);
@@ -50,6 +50,7 @@ public class Stimulateur extends Odorant{
 	public void seDeplacer() {
 		if (getPortee()>0) {
 			setPortee(getPortee()-1);
+			System.out.println("Portée : "+getPortee());
 		}else {
 			this.typeDiffusion = TypeDiffusion.INERTE;
 		}
@@ -61,8 +62,8 @@ public class Stimulateur extends Odorant{
 	public void diffuser(DepotDTO depot) {
 		if (depot.getTypeElement() == DepotDTO.EnumTypeForme.HERBIVORE) { this.typeDiffusion = TypeDiffusion.HERBIVORE;}
 		if (depot.getTypeElement() == DepotDTO.EnumTypeForme.CARNIVORE) { this.typeDiffusion = TypeDiffusion.CARNIVORE;}
-		setPortee(60);
-		//System.out.println("Diffusion !");
+		setPortee(160);
+		System.out.println("Diffusion : "+ depot.getTypeElement());
 	}
 
 }
