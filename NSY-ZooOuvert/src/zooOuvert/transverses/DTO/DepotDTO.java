@@ -1,7 +1,9 @@
 package zooOuvert.transverses.DTO;
 
+import zooOuvert.vue.formes.Ajout;
 import zooOuvert.vue.formes.FormeGeometrique;
 import zooOuvert.vue.formes.Odeur;
+import zooOuvert.vue.formes.Retrait;
 
 public class DepotDTO {
 
@@ -18,11 +20,11 @@ public class DepotDTO {
 	 * Type d'Element transporté.
 	 * (Sert principalement à l'affichage de la couleur)
 	 */
-	private EnumTypeForme typeElement;
+	private EnumTypeElement typeElement;
 	/**
 	 * Choix entre Visiteur, Carnivore et Herbivore.
 	 */
-	public enum EnumTypeForme {VISITEUR, HERBIVORE, CARNIVORE};
+	public enum EnumTypeElement {VISITEUR, HERBIVORE, CARNIVORE, VIDE};
 	/**
 	 * Type d'Element transporté.
 	 * (Sert principalement à l'action à réaliser)
@@ -31,22 +33,22 @@ public class DepotDTO {
 	/**
 	 * Choix entre Odeur et Ajout.
 	 */
-	public enum EnumTypeAction {ODEUR, AJOUT};
+	public enum EnumTypeAction {ODEUR, AJOUT, RETRAIT};
 	
 	
 	public DepotDTO(FormeGeometrique forme) {
 		this.posX = forme.getPosX();
 		this.posY = forme.getPosY();
 
-		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.HERBIVORE) {typeElement = EnumTypeForme.HERBIVORE;}
-		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.CARNIVORE) {typeElement = EnumTypeForme.CARNIVORE;}
-		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.VISITEUR) {typeElement = EnumTypeForme.VISITEUR;}
+		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.HERBIVORE) {typeElement = EnumTypeElement.HERBIVORE;}
+		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.CARNIVORE) {typeElement = EnumTypeElement.CARNIVORE;}
+		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.VISITEUR) {typeElement = EnumTypeElement.VISITEUR;}
+		if (forme.getTypeElement() == FormeGeometrique.EnumTypeForme.VIDE) {typeElement = EnumTypeElement.VIDE;}
 		
 
 		if (forme instanceof Odeur) {typeAction = EnumTypeAction.ODEUR;}
-		
-		//TODO Gérer les ajouts
-		//if (forme instanceof Ajout) {typeAction = EnumTypeAction.AJOUT;}
+		if (forme instanceof Ajout) {typeAction = EnumTypeAction.AJOUT;}
+		if (forme instanceof Retrait) {typeAction = EnumTypeAction.RETRAIT;}
 	}
 
 
@@ -85,7 +87,7 @@ public class DepotDTO {
 	/**
 	 * @return the typeElement
 	 */
-	public EnumTypeForme getTypeElement() {
+	public EnumTypeElement getTypeElement() {
 		return typeElement;
 	}
 

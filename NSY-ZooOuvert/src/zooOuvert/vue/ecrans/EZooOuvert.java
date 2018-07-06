@@ -16,6 +16,8 @@ import zooOuvert.transverses.Positionnable;
 import zooOuvert.transverses.DTO.ElementDTO;
 import zooOuvert.transverses.DTO.DepotDTO;
 import zooOuvert.vue.formes.Odeur;
+import zooOuvert.vue.formes.Retrait;
+import zooOuvert.vue.formes.Ajout;
 import zooOuvert.vue.formes.FormeGeometrique.EnumTypeForme;
 
 /**
@@ -76,9 +78,23 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	 */
 	private Odeur odeurCarnivore;
 	/**
-	 * Liste des elements  afficher dans le canvas.
+	 * Ajout d'un visiteur par glisser/deposer.
 	 */
-	/*private ArrayList<ElementDTO> mesElements;*/
+	private Ajout ajoutVisiteur;
+	/**
+	 * Ajout d'un herbivore par glisser/deposer.
+	 */
+	private Ajout ajoutHerbivore;
+	/**
+	 * Ajout d'un carnivore par glisser/deposer.
+	 */
+	private Ajout ajoutCarnivore;
+	/**
+	 * Retrait d'un élément par glisser/deposer.
+	 */
+	private Retrait retraitElement;
+	
+	
 	////////////////////////////////////////////////////////////Constructeurs.////////////////////////////////////////////////////////////////////////
 
 	/////////////////////////////////////////////////////////////Accesseurs.//////////////////////////////////////////////////////////////////////////
@@ -108,7 +124,8 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		creerBoutonArreter();
 		creerCadranSatisfaction();
 		creerOdeurs();
-		
+		creerAjouts();
+		creerRetraits();
 		ellipseMode(CENTER);
 	}
 	
@@ -122,8 +139,9 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		//Demandera au métier les élements à jour.
 		afficherElements(presenteur.getElements());
 		afficherTemps();
-		odeurHerbivore.afficher();
-		odeurCarnivore.afficher();
+		afficherOdeurs();
+		afficherAjouts();
+		afficherRetraits();
 	}
 	
 	/**
@@ -132,6 +150,10 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	public void mouseMoved(){
 	 if (odeurHerbivore.testerSurvol(mouseX, mouseY)) odeurHerbivore.survoler(); else odeurHerbivore.finSurvoler();
 	 if (odeurCarnivore.testerSurvol(mouseX, mouseY)) odeurCarnivore.survoler(); else odeurCarnivore.finSurvoler();
+	 if (ajoutVisiteur.testerSurvol(mouseX, mouseY)) ajoutVisiteur.survoler(); else ajoutVisiteur.finSurvoler();
+	 if (ajoutHerbivore.testerSurvol(mouseX, mouseY)) ajoutHerbivore.survoler(); else ajoutHerbivore.finSurvoler();
+	 if (ajoutCarnivore.testerSurvol(mouseX, mouseY)) ajoutCarnivore.survoler(); else ajoutCarnivore.finSurvoler();
+	 if (retraitElement.testerSurvol(mouseX, mouseY)) retraitElement.survoler(); else retraitElement.finSurvoler();
 	}
 	
 	/**
@@ -140,6 +162,10 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	public void mousePressed(){
 		if (odeurHerbivore.testerSurvol(mouseX, mouseY)) odeurHerbivore.presser();
 		if (odeurCarnivore.testerSurvol(mouseX, mouseY)) odeurCarnivore.presser();
+		if (ajoutVisiteur.testerSurvol(mouseX, mouseY)) ajoutVisiteur.presser();
+		if (ajoutHerbivore.testerSurvol(mouseX, mouseY)) ajoutHerbivore.presser();
+		if (ajoutCarnivore.testerSurvol(mouseX, mouseY)) ajoutCarnivore.presser();
+		if (retraitElement.testerSurvol(mouseX, mouseY)) retraitElement.presser();
 	}
 	
 	/**
@@ -155,14 +181,35 @@ public class EZooOuvert extends PApplet implements Positionnable{
 			presenteur.envoyerDepot(new DepotDTO(odeurCarnivore));
 			odeurCarnivore.relacher();
 		}
+		if (ajoutVisiteur.testerSurvol(mouseX, mouseY)) {
+			presenteur.envoyerDepot(new DepotDTO(ajoutVisiteur));
+			ajoutVisiteur.relacher();
+		}
+		if (ajoutHerbivore.testerSurvol(mouseX, mouseY)) {
+			presenteur.envoyerDepot(new DepotDTO(ajoutHerbivore));
+			ajoutHerbivore.relacher();
+		}
+		if (ajoutCarnivore.testerSurvol(mouseX, mouseY)) {
+			presenteur.envoyerDepot(new DepotDTO(ajoutCarnivore));
+			ajoutCarnivore.relacher();
+		}
+		if (retraitElement.testerSurvol(mouseX, mouseY)) {
+			presenteur.envoyerDepot(new DepotDTO(retraitElement));
+			retraitElement.relacher();
+		}
 	}
 
 	/**
 	 * Modifiera les coordonnées de la forme pour correspondre au déplacement de la souris.
 	 */
 	public void mouseDragged(){
+		//TODO Créer un verrou qui empeche d'embarquer les autres deposable au survol de ceux-ci.
 	  if (odeurHerbivore.testerSurvol(mouseX, mouseY)){ odeurHerbivore.setPosX(mouseX); odeurHerbivore.setPosY(mouseY);} 
 	  if (odeurCarnivore.testerSurvol(mouseX, mouseY)){ odeurCarnivore.setPosX(mouseX); odeurCarnivore.setPosY(mouseY);} 
+	  if (ajoutVisiteur.testerSurvol(mouseX, mouseY)){ ajoutVisiteur.setPosX(mouseX); ajoutVisiteur.setPosY(mouseY);} 
+	  if (ajoutHerbivore.testerSurvol(mouseX, mouseY)){ ajoutHerbivore.setPosX(mouseX); ajoutHerbivore.setPosY(mouseY);} 
+	  if (ajoutCarnivore.testerSurvol(mouseX, mouseY)){ ajoutCarnivore.setPosX(mouseX); ajoutCarnivore.setPosY(mouseY);} 
+	  if (retraitElement.testerSurvol(mouseX, mouseY)){ retraitElement.setPosX(mouseX); retraitElement.setPosY(mouseY);} 
 	}
 	
 	/////////////////////////////////////////////////////////////////Méthodes publiques.///////////////////////////////////////////////////////////////
@@ -182,11 +229,44 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	
 	///////////////////////////////////////////////////////////////////Méthodes privées////////////////////////////////////////////////////////////////
 	
+
+	private void creerSlider() {
+		slider = new GSlider(this, 960, 465, 280, 10, 10);
+	}
+	private void creerBoutonArreter() {
+		icone=loadImage("img/pde-32.png");
+		boutonArreter = new GButton(this, 1055, 515, 185, 50);
+		boutonArreter.setIcon(icone, 1, GAlign.MIDDLE, GAlign.CENTER);
+		boutonArreter.setIconPos(GAlign.WEST);
+		boutonArreter.setText("Arrêter la simulation");
+	}
+	private void creerCadranSatisfaction(){
+		cadranSatisfaction = new GKnob(this, POSX_CANVAS+11*LARGEUR_CANVAS/(2*NB_ZONES_X), POSY_CANVAS+HAUTEUR_CANVAS+10, 70, 70, (float) 0.75);
+		cadranSatisfaction.setEnabled(false);
+	}
+	private void creerOdeurs() {
+		odeurHerbivore = new Odeur(this, EnumTypeForme.HERBIVORE, 130, 740, 30);
+		odeurCarnivore = new Odeur(this, EnumTypeForme.CARNIVORE, 260, 740, 30);
+	}
+	private void creerAjouts() {
+		ajoutVisiteur = new Ajout(this, EnumTypeForme.VISITEUR, 1000, 160, 20);
+		ajoutHerbivore = new Ajout(this, EnumTypeForme.HERBIVORE, 1000, 215, 20);
+		ajoutCarnivore = new Ajout(this, EnumTypeForme.CARNIVORE, 1000, 270, 20);
+	}
+	private void creerRetraits() {
+		retraitElement = new Retrait(this, EnumTypeForme.VIDE, 1000, 370, 20);
+	}
+	
+	
+	
+	
 	/**
 	 * Méthode qui aura la charge d'afficher le template de l'application (Tous ce qui sera fixe).
 	 */
 	private void afficherStructure() {
 		fill(COULEUR_FOND_1);
+		//Pour que même le background soit regénéré pour le passage des ajouts.
+		rect(0,0,width,height);
 		//Les deux principaux
 		rect(10, 10, 910, 780);
 		rect(930, 10, 340, 780);
@@ -233,6 +313,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		text("Herbivore",1040,220);
 		text("Carnivore",1040,275);
 		text("Suppression",960,345);
+		text("Retrait",1040,375);
 		text("Gestion du temps",960,435);
 		
 		
@@ -281,27 +362,31 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	}
 
 	/**
+	 * Méthode qui affichera les deux odeurs.
+	 */
+	private void afficherOdeurs() {
+		odeurHerbivore.afficher();
+		odeurCarnivore.afficher();
+	}
+	/**
+	 * Méthode qui affichera les ajouts.
+	 */
+	private void afficherAjouts() {
+		ajoutVisiteur.afficher();
+		ajoutHerbivore.afficher();
+		ajoutCarnivore.afficher();
+	}
+	/**
+	 * Méthode qui affichera les retraits.
+	 */
+	private void afficherRetraits() {
+		retraitElement.afficher();
+	}
+	
+	/**
 	 * Fonction qui affichera le temps simulé en haut à droite.
 	 */
 	private void afficherTemps() {
 		text(frameCount,850,80);
-	}
-	private void creerSlider() {
-		slider = new GSlider(this, 960, 465, 280, 10, 10);
-	}
-	private void creerBoutonArreter() {
-		icone=loadImage("img/pde-32.png");
-		boutonArreter = new GButton(this, 1055, 515, 185, 50);
-		boutonArreter.setIcon(icone, 1, GAlign.MIDDLE, GAlign.CENTER);
-		boutonArreter.setIconPos(GAlign.WEST);
-		boutonArreter.setText("Arrêter la simulation");
-	}
-	private void creerCadranSatisfaction(){
-		cadranSatisfaction = new GKnob(this, POSX_CANVAS+11*LARGEUR_CANVAS/(2*NB_ZONES_X), POSY_CANVAS+HAUTEUR_CANVAS+10, 70, 70, (float) 0.75);
-		cadranSatisfaction.setEnabled(false);
-	}
-	private void creerOdeurs() {
-		odeurHerbivore = new Odeur(this, EnumTypeForme.HERBIVORE, 130, 740, 30);
-		odeurCarnivore = new Odeur(this, EnumTypeForme.CARNIVORE, 260, 740, 30);
 	}
 }

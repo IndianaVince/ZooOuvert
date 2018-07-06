@@ -71,7 +71,7 @@ abstract public class FormeGeometrique implements ImplDeposable{
 	/**
 	 * Choix entre Visiteur, Carnivore et Herbivore.
 	 */
-	public enum EnumTypeForme {VISITEUR, HERBIVORE, CARNIVORE};
+	public enum EnumTypeForme {VISITEUR, HERBIVORE, CARNIVORE, VIDE};
 	
 	
 	/**
@@ -86,8 +86,9 @@ abstract public class FormeGeometrique implements ImplDeposable{
 		this.typeElement=type;
 		this.posInitialeX=posInitX;
 		this.posInitialeY=posInitY;
-		initialiser();
+		
 		initialiserCouleurs();
+		initialiser();
 		
 		
 	}
@@ -221,6 +222,29 @@ abstract public class FormeGeometrique implements ImplDeposable{
 		setPosY(posInitialeY);
 	}
 
+	@Override
+	public void survoler() {
+		setCouleurActuelle(getCouleurSurvol());
+		setContourActuel(getContourSurvol());
+	}
+
+	@Override
+	public void finSurvoler() {
+		setCouleurActuelle(getCouleurRepos());
+		setContourActuel(getContourRepos());
+	}
+
+	@Override
+	public void presser() {
+		setCouleurActuelle(getCouleurSaisie());
+		setContourActuel(getContourSaisi());
+	}
+
+	@Override
+	public void relacher() {
+		initialiser();
+	}
+
 	/**
 	 * Permet de transformer le tableau de int des constantes en couleur PApplet.
 	 */
@@ -251,6 +275,9 @@ abstract public class FormeGeometrique implements ImplDeposable{
 			break;
 		case HERBIVORE:
 			setCouleurs(COL_ODEUR_HERBI);
+			break;
+		case VIDE:
+			setCouleurs(COL_ODEUR_VIDE);
 			break;
 		}
 	}

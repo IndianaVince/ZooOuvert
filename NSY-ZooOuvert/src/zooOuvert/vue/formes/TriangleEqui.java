@@ -8,7 +8,7 @@ import processing.core.PApplet;
  * @author vincent.hofman.auditeur@lecnam.net
  *
  */
-public abstract class TriangleEqui extends FormeGeometrique {
+public abstract class TriangleEqui extends FormeGeometrique implements ImplDeposable{
 
 	/**
 	 * Les coordonnées en X des points du triangle.

@@ -59,10 +59,10 @@ public class PGeneral implements ImplPGeneral{
 	}
 	
 	@Override
-		public void envoyerDepot(DepotDTO depot) {
-			facadeElement.envoyerDepot(depot);
-			
-		}
+	public void envoyerDepot(DepotDTO depot) {
+		facadeElement.envoyerDepot(depot);
+		
+	}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 
 	@Override
@@ -77,11 +77,6 @@ public class PGeneral implements ImplPGeneral{
 		
 	}
 
-	@Override
-	public void detruireElement(ElementDTO positionElement) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	

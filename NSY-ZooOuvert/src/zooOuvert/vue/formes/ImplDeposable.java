@@ -50,7 +50,19 @@ public interface ImplDeposable {
 			{0,0,245}//Saisi contour
 	};
 	
-	
+	/**
+	 * Tableau de tableau de int permettant de reproduire la couleur d'un retrait en processing.
+	 * 3 couleurs initiales, 3 couleurs au survol, 3 couleurs à la saisie,
+	 * 3 couleurs de contour initiales, 3 couleurs de contour au survol, 3 couleurs de contour à la saisie.
+	 */
+	public final int[][] COL_ODEUR_VIDE={
+			{50,50,50},//Initial
+			{80,80,80},//Survol
+			{110,110,110},//Saisi
+			{20,20,20},//Initial contour
+			{50,50,50},//Survol contour
+			{80,80,80}//Saisi contour
+	};
 	
 
 	

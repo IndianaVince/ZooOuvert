@@ -60,8 +60,8 @@ public class Stimulateur extends Odorant{
 	 * Méthode qui permettra de diffuser une odeur autour du stimulateur.
 	 */
 	public void diffuser(DepotDTO depot) {
-		if (depot.getTypeElement() == DepotDTO.EnumTypeForme.HERBIVORE) { this.typeDiffusion = TypeDiffusion.HERBIVORE;}
-		if (depot.getTypeElement() == DepotDTO.EnumTypeForme.CARNIVORE) { this.typeDiffusion = TypeDiffusion.CARNIVORE;}
+		if (depot.getTypeElement() == DepotDTO.EnumTypeElement.HERBIVORE) { this.typeDiffusion = TypeDiffusion.HERBIVORE;}
+		if (depot.getTypeElement() == DepotDTO.EnumTypeElement.CARNIVORE) { this.typeDiffusion = TypeDiffusion.CARNIVORE;}
 		setPortee(160);
 		System.out.println("Diffusion : "+ depot.getTypeElement());
 	}

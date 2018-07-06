@@ -1,7 +1,5 @@
 package zooOuvert.transverses;
 
-import processing.core.PApplet;
-
 /**
  * Cette interface contiendra toutes les constantes et signatures de méthodes ayant attrait à la position.
  * @author vincent.hofman.auditeur@lecnam.fr

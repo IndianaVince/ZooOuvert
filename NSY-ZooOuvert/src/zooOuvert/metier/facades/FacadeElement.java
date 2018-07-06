@@ -101,6 +101,8 @@ public class FacadeElement implements Positionnable{
 	 */
 	public void envoyerDepot(DepotDTO depot) {
 		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.ODEUR) {traiterDepotOdeur(depot); }
+		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.AJOUT) {traiterDepotAjout(depot); }
+		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.RETRAIT) {traiterDepotRetrait(depot); }
 	}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 	
@@ -259,5 +261,61 @@ public class FacadeElement implements Positionnable{
 			
 		}
 	}
-
+	
+	/**
+	 * Gère un depot d'ajout d'élément après relachement du bouton de la souris.
+	 * @param depot d'ajout sous forme DTO.
+	 */
+	private void traiterDepotAjout(DepotDTO depot) {
+		DTOToElement(depot);
+	}
+	
+	private void DTOToElement(DepotDTO depot) {
+		Element e = null;
+		switch (depot.getTypeElement()) {
+			case VISITEUR:
+				e = new Visiteur(new Position(depot.getPosX(), depot.getPosY()));
+				break;
+			case HERBIVORE:
+				e = new Herbivore(new Position(depot.getPosX(), depot.getPosY()));
+				break;
+			case CARNIVORE:
+				e = new Carnivore(new Position(depot.getPosX(), depot.getPosY()));
+				break;
+		}
+		if (e!=null) {
+			listeElements.add(e);
+		}else {
+			System.out.println("Probleme à l'ajout d'un élément");
+		}
+		
+	}
+	
+	/**
+	 * Gère un depot de type retrait qui devra supprimer un ou plusieurs élément après relachement du bouton de la souris.
+	 * @param depot d'ajout sous forme DTO.
+	 */
+	private void traiterDepotRetrait(DepotDTO depot) {
+		//Les éléments à supprimer pour eviter de modifier la liste pendant que je le parcoure.
+		ArrayList<Element> aSupprimer = new ArrayList<>();
+		
+		//Etape 1 : On identifie les éléments à sacrifier
+		for (Iterator<Element> iterator = listeElements.iterator(); iterator.hasNext();) {
+			Element element = (Element) iterator.next();
+			
+			if (!(element instanceof Stimulateur)) {
+				double distanceReelle = Math.sqrt(
+										Math.pow(element.getPositionActuelle().getPosX() - depot.getPosX(), 2) + 
+										Math.pow(element.getPositionActuelle().getPosY() - depot.getPosY(), 2)
+										);
+				//System.out.println("distance réelle : "+distanceReelle);
+				if (distanceReelle<=10) {
+					aSupprimer.add(element);
+				}
+			}			
+		}
+		//Etape 2 : Couic les élements !
+		listeElements.removeAll(aSupprimer);
+		
+	}
 }
