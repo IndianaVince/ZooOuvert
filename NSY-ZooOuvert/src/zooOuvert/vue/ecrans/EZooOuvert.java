@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import g4p_controls.GAlign;
 import g4p_controls.GButton;
-import g4p_controls.GKnob;
 import g4p_controls.GSlider;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -43,6 +42,8 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	private final int COULEUR_CARNIVORE = color(255,0,0);
 	private final int COULEUR_PORTEE_CARNIVORE = color(255,100,100,50);
 	private final int COULEUR_STIMULATEUR = color(255,0,255);	
+	private final int FRAME_RATE = 32;	
+	private final int FRAME_RATE_CANVAS = 16;
 	///////////////////////////////////////////////////////// Attributs de classe ////////////////////////////////////////////////////////////////////
 	/**
 	 * Presenteur qui instancie l'écran.
@@ -58,17 +59,29 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	 */
 	private PImage icone;
 	/**
+	 * Dernière liste d'éléments mise à jour.
+	 */
+	private ArrayList<ElementDTO> elementsAAfficher;
+	/**
+	 * Cadence de rafraichissement avec le métier.
+	 */
+	private float cadence = 60;
+	/**
+	 * framrate des éléments du canvas.
+	 */
+	private float fRateCanvas;
+	/**
 	 * Slider qui permettra d'accelerer/ralentir la simulation.
 	 */
-	private GSlider slider;
+	private GSlider gestionTemps;
+	/**
+	 * Slider qui affichera la satisfaction client.
+	 */
+	private GSlider satisfaction;
 	/**
 	 * Permettra de stopper la simulation.
 	 */
 	private GButton boutonArreter ;
-	/**
-	 * Pour avoir en visu la satisfaction globale des utilisateurs virtuels.
-	 */
-	private GKnob cadranSatisfaction;
 	/**
 	 * Odeur d'herbivore à glisser/déposer sur un stimulateur.
 	 */
@@ -116,13 +129,17 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	 */
 	@Override
 	public void setup() {
+
+		elementsAAfficher = presenteur.getElements();
+		frameRate(FRAME_RATE);
+		fRateCanvas = FRAME_RATE_CANVAS;
+		
 		smooth();
-		frameRate(60);
+		
 		stroke(2);
 		
-		creerSlider();
+		creerSliders();
 		creerBoutonArreter();
-		creerCadranSatisfaction();
 		creerOdeurs();
 		creerAjouts();
 		creerRetraits();
@@ -135,13 +152,47 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	@Override
 	public void draw() {
 		
+		
+		//System.out.println("fRateCanvas = "+fRateCanvas);
+		//Tout ce qui devra être très fluide
 		afficherStructure();
-		//Demandera au métier les élements à jour.
-		afficherElements(presenteur.getElements());
-		afficherTemps();
 		afficherOdeurs();
 		afficherAjouts();
 		afficherRetraits();
+		//Demandera au métier les élements à jour.
+		afficherElements(elementsAAfficher);
+		afficherTemps();
+		mettreAJourSatisfaction();	
+		elementsAAfficher = presenteur.getElements();
+		
+		/**
+		 * J'ai travaillé sur une deuxième boucle (dans le draw) pour pouvoir faire la gestion du temps mais ça n'a pas 
+		 * fonctionné.
+		 * Les soltions testées : 
+		 * - faire un modulo sur millis() mais c'est très très gourmands et ça saccade sans que j'ai pu améliorer le procédé.
+		 * - faire un modulo sur frameCount mais ça n'a pas donné de bons résultats.
+		 * 
+		 * J'ai testé des procédés utilisés lors de mes boucles en javascript (plusieurs boucles indépendants) mais je n'ai pas su les adapter à Processing
+		 * car je me suis senti bloqué par un seul draw().
+		 */
+		
+		if (gestionTemps.isOver(mouseX, mouseY)) {
+			cadence = map(gestionTemps.getValueF(),0,1,0.5f,2);
+			//cadence = gestionTemps.getValueF();
+			fRateCanvas = FRAME_RATE_CANVAS*cadence;
+			
+		}
+			
+		
+		
+		//Tout ce qui sera à un rythme pouvant être appréhendé par l'utilisateur.
+		if ( frameCount%(1000/FRAME_RATE_CANVAS)  == 0) {
+			elementsAAfficher = presenteur.getElements();
+			System.out.println(frameCount%(1000*cadence/FRAME_RATE_CANVAS));
+		}
+		
+		
+			
 	}
 	
 	/**
@@ -212,6 +263,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	  if (retraitElement.testerSurvol(mouseX, mouseY)){ retraitElement.setPosX(mouseX); retraitElement.setPosY(mouseY);} 
 	}
 	
+ 
 	/////////////////////////////////////////////////////////////////Méthodes publiques.///////////////////////////////////////////////////////////////
 	
 	/**
@@ -230,8 +282,11 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	///////////////////////////////////////////////////////////////////Méthodes privées////////////////////////////////////////////////////////////////
 	
 
-	private void creerSlider() {
-		slider = new GSlider(this, 960, 465, 280, 10, 10);
+	private void creerSliders() {
+		gestionTemps = new GSlider(this, 960, 465, 280, 50, 20);
+		
+		satisfaction = new GSlider(this, 370,740, 500, 50, 20);
+		satisfaction.setEnabled(false);
 	}
 	private void creerBoutonArreter() {
 		icone=loadImage("img/pde-32.png");
@@ -239,10 +294,6 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		boutonArreter.setIcon(icone, 1, GAlign.MIDDLE, GAlign.CENTER);
 		boutonArreter.setIconPos(GAlign.WEST);
 		boutonArreter.setText("Arrêter la simulation");
-	}
-	private void creerCadranSatisfaction(){
-		cadranSatisfaction = new GKnob(this, POSX_CANVAS+11*LARGEUR_CANVAS/(2*NB_ZONES_X), POSY_CANVAS+HAUTEUR_CANVAS+10, 70, 70, (float) 0.75);
-		cadranSatisfaction.setEnabled(false);
 	}
 	private void creerOdeurs() {
 		odeurHerbivore = new Odeur(this, EnumTypeForme.HERBIVORE, 130, 740, 30);
@@ -305,7 +356,7 @@ public class EZooOuvert extends PApplet implements Positionnable{
 		textAlign(CENTER);
 		text("Odeur végé",POSX_CANVAS+LARGEUR_CANVAS/(NB_ZONES_X*2),POSY_CANVAS+HAUTEUR_CANVAS+75);
 		text("Odeur carni",POSX_CANVAS+3*LARGEUR_CANVAS/(NB_ZONES_X*2),POSY_CANVAS+HAUTEUR_CANVAS+75);
-		text("Satisfaction globales des clients :",POSX_CANVAS+9*LARGEUR_CANVAS/(NB_ZONES_X*2),POSY_CANVAS+HAUTEUR_CANVAS+50);
+		text("Satisfaction globales des clients :",POSX_CANVAS+430,POSY_CANVAS+630);
 		textAlign(LEFT);
 		
 		text("Ajouts",960,135);
@@ -387,6 +438,15 @@ public class EZooOuvert extends PApplet implements Positionnable{
 	 * Fonction qui affichera le temps simulé en haut à droite.
 	 */
 	private void afficherTemps() {
-		text(frameCount,850,80);
+		text(frameCount%cadence,850,80);
+	}
+	/**
+	 * Va chercher dans le métier la satisfaction globale des clients.
+	 */
+	private void mettreAJourSatisfaction() {
+		satisfaction.setValue(
+				map(presenteur.getSatisfaction(),
+					0,100,
+					0,1));
 	}
 }

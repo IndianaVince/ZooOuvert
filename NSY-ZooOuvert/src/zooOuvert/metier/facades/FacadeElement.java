@@ -104,6 +104,26 @@ public class FacadeElement implements Positionnable{
 		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.AJOUT) {traiterDepotAjout(depot); }
 		if (depot.getTypeAction() == DepotDTO.EnumTypeAction.RETRAIT) {traiterDepotRetrait(depot); }
 	}
+	/**
+	 * Méthode qui devra permettre de récupérer l'indice de staisfaction global des visiteurs.
+	 * @return l'indice entre 0 et 1
+	 */
+	public float getSatisfaction() {
+		
+		int nbVisiteur=0;
+		int sommeSatisfaction=0;
+		for (Iterator<Element> iterator = listeElements.iterator(); iterator.hasNext();) {
+			Element element = (Element) iterator.next();
+			
+			if (element instanceof Visiteur) {
+				sommeSatisfaction += ((Visiteur) element).getIndiceSatisfaction();
+				nbVisiteur++;
+			}
+			
+		} 
+		
+		return (sommeSatisfaction / nbVisiteur);
+	}
 ////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -281,6 +301,8 @@ public class FacadeElement implements Positionnable{
 				break;
 			case CARNIVORE:
 				e = new Carnivore(new Position(depot.getPosX(), depot.getPosY()));
+				break;
+			case VIDE:
 				break;
 		}
 		if (e!=null) {

@@ -63,7 +63,6 @@ public class PGeneral implements ImplPGeneral{
 		facadeElement.envoyerDepot(depot);
 		
 	}
-////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 
 	@Override
 	public void insererOdeur(ElementDTO odeur) {
@@ -76,8 +75,11 @@ public class PGeneral implements ImplPGeneral{
 		// TODO Auto-generated method stub
 		
 	}
-
+	@Override
+		public float getSatisfaction() {
+			return facadeElement.getSatisfaction();
+		}
 	
-	
+////////////////////////////////////////////////////////////Méthodes privées//////////////////////////////////////////////////////////////////////
 	
 }

@@ -42,5 +42,9 @@ public interface ImplPGeneral {
 	 * @param typeObjetRelache objet déposer sur le canvas avec les coordonnées.
 	 */
 	public void envoyerDepot(DepotDTO depot);
-	
+	/**
+	 * Méthode qui devra permettre de récupérer l'indice de staisfaction global des visiteurs.
+	 * @return l'indice entre 0 et 1
+	 */
+	public float getSatisfaction();
 }
